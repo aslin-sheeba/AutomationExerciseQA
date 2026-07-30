@@ -1,22 +1,11 @@
 {
   "existing_user": {
-      "name": "Automation Test User",
-      "email": "automation_test_2026@example.com",
-      "password": "Test@12345",
-      "first_name": "Automation",
-      "last_name": "Tester",
-        "company": "QA Automation",
-        "address": "123 Automation Street",
-        "address2": "Testing Area",
-        "country": "India",
-        "state": "Tamil Nadu",
-        "city": "Chennai",
-        "zipcode": "600001",
-        "mobile_number": "9876543210"
-    },
-
-    "invalid_user": {
-        "email": "invalid_user@example.com",
-        "password": "WrongPassword123"
-    }
+    "name": "QA Existing User",
+    "email": "REPLACE_WITH_AN_ACCOUNT_YOU_HAVE_ALREADY_CREATED@example.com",
+    "password": "REPLACE_ME"
+  },
+  "invalid_user": {
+    "email": "does-not-exist@example.com",
+    "password": "WrongPassword123"
+  }
 }

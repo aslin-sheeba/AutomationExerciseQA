@@ -4,12 +4,7 @@ Question we're answering: "Does this individual feature work, on its own,
 when used correctly?" No concern yet for how it interacts with anything else.
 """
 import pytest
-import json
 from utils.helpers import random_email, random_name
-
-
-with open("data/users.json") as f:
-    USERS = json.load(f)
 
 
 @pytest.mark.functional
@@ -34,12 +29,11 @@ def test_new_user_can_sign_up(login_page, signup_page):
 
 
 @pytest.mark.functional
-def test_signup_rejects_email_already_in_use(login_page):
-    # NOTE: replace with an email you know already exists on the site
-    # to run this meaningfully.
-    existing_email = USERS["existing_user"]["email"]
+def test_signup_rejects_email_already_in_use(login_page, registered_user):
+    # registered_user is created via the API before the session starts, so
+    # this email is guaranteed to already exist -- no placeholder guessing.
     login_page.open()
-    login_page.start_signup("Existing Person", existing_email)
+    login_page.start_signup("Existing Person", registered_user["email"])
 
     assert login_page.has_signup_email_exists_error(), \
         "Expected 'Email Address already exist!' message was not shown"

@@ -1,8 +1,59 @@
 import os
 import pytest
+import requests
+from utils.helpers import random_email, random_name
 from utils.logger import get_logger
 
 logger = get_logger("conftest")
+
+
+@pytest.fixture(scope="session")
+def registered_user():
+    """
+    Creates ONE real account on automationexercise.com via its public
+    createAccount API before the test session starts, and hands the
+    credentials to any test that needs a guaranteed-to-exist user
+    (e.g. valid login, or triggering a duplicate-signup error).
+
+    This avoids two bad patterns: hardcoding a fake email that doesn't
+    exist, and relying on someone manually maintaining data/users.json.
+    """
+    email = random_email()
+    password = "TestPass123!"
+    name = random_name("QA_Registered")
+
+    payload = {
+        "name": name,
+        "email": email,
+        "password": password,
+        "title": "Mr",
+        "birth_date": "10",
+        "birth_month": "5",
+        "birth_year": "1995",
+        "firstname": "QA",
+        "lastname": "Registered",
+        "company": "QA Corp",
+        "address1": "1 Automation Way",
+        "address2": "",
+        "country": "United States",
+        "zipcode": "73301",
+        "state": "Texas",
+        "city": "Austin",
+        "mobile_number": "9998887777",
+    }
+
+    response = requests.post(
+        "https://automationexercise.com/api/createAccount",
+        data=payload,
+        timeout=15,
+    )
+    body = response.json()
+    assert body.get("responseCode") == 201, (
+        f"Setup failed: could not create test user via API. Response: {body}"
+    )
+
+    logger.info(f"Session test user created via API: {email}")
+    return {"email": email, "password": password, "name": name}
 
 
 # ---------- browser/page config (pytest-playwright reads these) ----------
